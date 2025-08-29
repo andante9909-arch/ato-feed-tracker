@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>아토 4주 급여 & 체중 관리표 (옵션 A)</title>
+  <meta name="theme-color" content="#0ea5e9" />
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <style>
+    :root{--bg:#f6faff;--fg:#111;--muted:#64748b;--brand:#0ea5e9;--line:#e5e7eb;--card:#ffffff}
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);font:15px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,"Apple SD Gothic Neo","Noto Sans KR","맑은 고딕",sans-serif}
+    .wrap{max-width:980px;margin:20px auto;padding:16px}
+    header{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-bottom:12px}
+    .title{font-size:20px;font-weight:800;letter-spacing:-.2px}
+    .badge{font-size:12px;color:white;background:#0ea5e9;padding:6px 10px;border-radius:999px;white-space:nowrap}
+    .sub{color:#64748b;margin-top:4px}
+    .grid{display:grid;grid-template-columns:1fr;gap:10px;margin:10px 0 14px}
+    @media(min-width:700px){.grid{grid-template-columns:repeat(3,1fr)}}
+    .card{border:1px solid #e5e7eb;border-radius:12px;padding:12px;background:#fff}
+    .card b{display:block;font-size:12px;color:#64748b;margin-bottom:4px}
+    .card .big{font-size:16px;font-weight:700}
+    .controls{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 12px}
+    button{appearance:none;border:1px solid #0ea5e9;color:#0ea5e9;background:#e0f2fe;border-radius:10px;padding:8px 12px;font-weight:700;cursor:pointer}
+    button:hover{filter:brightness(0.98)}
+    .sheet{border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;background:#fff}
+    table{width:100%;border-collapse:separate;border-spacing:0}
+    thead th{position:sticky;top:0;background:#f8fafc;border-bottom:1px solid #e5e7eb;padding:10px 8px;font-weight:800;text-align:center}
+    tbody td{border-bottom:1px solid #e5e7eb;padding:8px 8px;vertical-align:middle;text-align:center}
+    tbody tr:nth-child(odd){background:#fcfcfc}
+    .left{text-align:left}
+    .kcal{color:#0b6c9c;font-weight:700;white-space:nowrap}
+    .checkline{display:flex;align-items:center;gap:8px;justify-content:center}
+    input[type="text"]{width:100%;max-width:120px;padding:8px;border:1px solid #e5e7eb;border-radius:8px}
+    textarea{width:100%;min-height:34px;padding:8px;border:1px solid #e5e7eb;border-radius:8px;resize:vertical}
+    tfoot td{padding:10px;border-top:1px solid #e5e7eb;background:#f8fafc}
+    .footnote{font-size:12px;color:#64748b}
+    .pill{display:inline-block;border:1px dashed #e5e7eb;padding:2px 8px;border-radius:999px;font-size:12px;margin-left:6px;color:#334155}
+    .stickybar{position:sticky;bottom:10px;right:10px;display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
+    .saveok{color:#059669;font-weight:700;display:none}
+    @media print{.controls,.stickybar,.sub{display:none};@page{size:A4;margin:12mm}html,body{background:#fff}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <div class="title">🐶 아토 4주 급여 & 체중 관리표</div>
+        <div class="sub">옵션 A 기준 · 한 끼 <span class="kcal">240 kcal</span> · 하루 <span class="kcal">480 kcal</span> · 도기넛 50g + RC 171g</div>
+      </div>
+      <div class="badge">저지방 · 췌장 케어 친화</div>
+    </header>
+
+    <div class="grid">
+      <div class="card">
+        <b>혼합 DMB</b>
+        <div class="big">단백질 36.6% · 지방 6.6% · 탄수 41.1%</div>
+        <div class="footnote">에너지 구성(추정): P 39% / F 17% / C 44%</div>
+      </div>
+      <div class="card">
+        <b>미네랄 밸런스</b>
+        <div class="big">Ca 0.95% · P 0.65% <span class="pill">Ca:P ≈ 1.46 : 1</span></div>
+        <div class="footnote">권장 1.1–1.8 : 1 (상한 2:1 이내)</div>
+      </div>
+      <div class="card">
+        <b>급여 가이드</b>
+        <div>아침·저녁 동일: <b>도기넛 50g + RC 171g</b> (각 240 kcal)</div>
+        <div class="footnote">유산균 매일, 오메가3 저용량 시작 후 관찰</div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button onclick="window.print()">🖨️ 인쇄 / PDF 저장</button>
+      <button id="exportBtn">데이터 내보내기(JSON)</button>
+      <label for="importFile" style="display:inline-block">
+        <input id="importFile" type="file" accept="application/json" style="display:none"/>
+        <span class="btn-like" style="border:1px solid #0ea5e9;color:#0ea5e9;background:#e0f2fe;border-radius:10px;padding:8px 12px;font-weight:700;cursor:pointer">데이터 가져오기(JSON)</span>
+      </label>
+      <button id="clearBtn">체크/입력 초기화</button>
+      <span id="saveFlag" class="saveok">✓ 자동 저장됨</span>
+    </div>
+
+    <div class="sheet">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:70px">날짜</th>
+            <th>아침 (240 kcal)</th>
+            <th>저녁 (240 kcal)</th>
+            <th style="width:120px">현재 체중</th>
+            <th style="width:110px">체중 목표</th>
+            <th class="left">변 상태 / 특이사항</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+        <tfoot>
+          <tr>
+            <td colspan="6" class="footnote">
+              메모: 하루 총 급여량 = 도기넛 <b>100g</b> + RC <b>342g</b> (총 <b>480 kcal</b>) ·
+              유산균은 매 식사와 함께 또는 식후 급여 · 오메가3는 <b>저용량(체중 1kg당 30–50mg EPA+DHA)</b>으로 시작, 변 상태 관찰 ·
+              체중은 매주 같은 시간(아침 식전) 측정 권장
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <div class="stickybar">
+      <button onclick="window.scrollTo({top:0,behavior:'smooth'})">⬆️ 맨 위로</button>
+      <button onclick="location.reload()">⟳ 새로고침</button>
+    </div>
+  </div>
+
+  <script>
+    // --- Config ---
+    const DAYS = 28;
+    const STORAGE_KEY = 'ato-feed-tracker-v1';
+    const MORNING_TEXT = '도기넛 50g + RC 171g';
+    const EVENING_TEXT = '도기넛 50g + RC 171g';
+    const DEFAULT_TARGET = '21.0 kg';
+
+    const $ = (q)=>document.querySelector(q);
+    const tbody = $('#tbody');
+
+    function loadState(){
+      try{ return JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null') }catch{return null}
+    }
+    function saveState(){
+      const data = exportData();
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      const flag = document.getElementById('saveFlag');
+      flag.style.display='inline-block';
+      setTimeout(()=>flag.style.display='none', 1200);
+    }
+
+    function rowTemplate(i, state){
+      const s = state?.rows?.[i]||{};
+      return `
+        <tr>
+          <td>Day ${i+1}</td>
+          <td>
+            <div class="checkline">
+              <input type="checkbox" data-k="am" ${s.am?'checked':''}>
+              <label class="left">${MORNING_TEXT}</label>
+            </div>
+          </td>
+          <td>
+            <div class="checkline">
+              <input type="checkbox" data-k="pm" ${s.pm?'checked':''}>
+              <label class="left">${EVENING_TEXT}</label>
+            </div>
+          </td>
+          <td><input type="text" data-k="now" placeholder="______ kg" value="${s.now||''}"></td>
+          <td><input type="text" data-k="goal" value="${s.goal||state?.goal||DEFAULT_TARGET}"></td>
+          <td class="left"><textarea data-k="note" placeholder="변 상태, 식욕, 활력 등 메모">${s.note||''}</textarea></td>
+        </tr>`;
+    }
+
+    function render(){
+      const state = loadState()||{goal:DEFAULT_TARGET,rows:[]};
+      tbody.innerHTML = Array.from({length:DAYS}, (_,i)=>rowTemplate(i,state)).join('');
+      tbody.addEventListener('input', onEdit, {once:true, passive:true});
+      tbody.addEventListener('change', onEdit, {once:true, passive:true});
+    }
+
+    function onEdit(){
+      tbody.addEventListener('input', onEdit, {once:true, passive:true});
+      tbody.addEventListener('change', onEdit, {once:true, passive:true});
+      saveState();
+    }
+
+    function exportData(){
+      const rows = [];
+      tbody.querySelectorAll('tr').forEach(tr=>{
+        const get = k => tr.querySelector(`[data-k="${k}"]`);
+        rows.push({
+          am: get('am').checked,
+          pm: get('pm').checked,
+          now: get('now').value,
+          goal: get('goal').value,
+          note: get('note').value
+        });
+      });
+      const goal = rows[0]?.goal || DEFAULT_TARGET;
+      return {goal, rows};
+    }
+
+    function importData(obj){
+      if(!obj||!obj.rows){alert('JSON 형식이 올바르지 않아요');return}
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(obj));
+      render();
+    }
+
+    // Buttons
+    document.getElementById('exportBtn').addEventListener('click', ()=>{
+      const data = exportData();
+      const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'ato-feed-tracker.json'; a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    document.getElementById('importFile').addEventListener('change', (e)=>{
+      const file = e.target.files?.[0];
+      if(!file) return;
+      const reader = new FileReader();
+      reader.onload = ()=>{
+        try{ importData(JSON.parse(reader.result)); }
+        catch{ alert('JSON 파싱 오류'); }
+      };
+      reader.readAsText(file);
+    });
+
+    document.getElementById('clearBtn').addEventListener('click', ()=>{
+      if(confirm('모든 체크/입력을 초기화할까요? 되돌릴 수 없어요.')){
+        localStorage.removeItem(STORAGE_KEY);
+        render();
+      }
+    });
+
+    // PWA 등록 (서브경로에서도 OK)
+    if('serviceWorker' in navigator){
+      window.addEventListener('load',()=>{
+        navigator.serviceWorker.register('./service-worker.js');
+      });
+    }
+
+    render();
+  </script>
+</body>
+</html>
